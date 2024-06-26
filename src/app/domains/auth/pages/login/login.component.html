@@ -1,1 +1,9 @@
 <button type="button" (click)="login()">login</button>
+<hr />
+<button type="button" (click)="logout()">logout</button>
+
+@if (!!(user.name)) {
+    <h1>{{user.name}}</h1>
+}@else {
+    <h1>Aun no funciona</h1>
+}
