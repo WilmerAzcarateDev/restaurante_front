@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '@env/environment';
 import { AuthModel } from '@shared/models/auth.model';
+import { LoginModel } from '@shared/models/login.model';
 import { MessageModel } from '@shared/models/message.model';
+import { UserModel } from '@shared/models/user.model';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({
@@ -10,19 +12,16 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
 
-  http:HttpClient = inject(HttpClient);
+  http = inject(HttpClient);
 
-  user:any = signal<any>(null);
+  user = signal<UserModel|null>(null);
 
   url:string = environment.apiUrl
 
 
-  login(email:string,password:string):Observable<AuthModel>
+  login(login_data:LoginModel):Observable<AuthModel>
   {
-    return this.http.post<AuthModel>(`${this.url}/auth/login`,{
-      email:email,
-      password:password
-    });
+    return this.http.post<AuthModel>(`${this.url}/auth/login`,login_data);
   }
 
   logOut():Observable<MessageModel>
@@ -31,6 +30,6 @@ export class AuthService {
   }
 
   getUser(){
-    return this.http.post(`${this.url}/auth/me`,{}).pipe(tap((user)=>this.user.set(user)));
+    return this.http.post<UserModel>(`${this.url}/auth/me`,{}).pipe(tap((user)=>this.user.set(user)));
   }
 }
